@@ -6,12 +6,13 @@
 // =============================================================
 
 // Requiring our Todo model
-var db = require("../models");
+const User = require("./userModel.js");
 
 // Routes
 // =============================================================
 module.exports = function(app) {
 
+  // TODO ================================================================================= get some chinese food
   // GET route for getting all of the posts
   app.get("/api/posts/", function(req, res) {
     db.Post.findAll({})

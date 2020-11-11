@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
-// Mongo boilerplate 
+// Mongoose boilerplate 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/workout";
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
@@ -23,6 +23,8 @@ mongoose.connect(MONGODB_URI, {
 // Required routing
 // require("./routes/apiRoutes")(app);
 require("./routes/html-routes")(app);
+
+
 
 // Starts the server to begin listening
 app.listen(PORT, function(){
