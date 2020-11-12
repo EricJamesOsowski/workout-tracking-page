@@ -1,85 +1,41 @@
-// *********************************************************************************
-// api-routes.js - this file offers a set of routes for displaying and saving data to the db
-// *********************************************************************************
 
-// Dependencies
-// =============================================================
+const Workout = require("../models/workoutModel");
 
-// Requiring our Todo model
-const User = require("./userModel.js");
+module.exports = function (app) {
 
-// Routes
-// =============================================================
-module.exports = function(app) {
-
-  // TODO ================================================================================= get some chinese food
-  // GET route for getting all of the posts
-  app.get("/api/posts/", function(req, res) {
-    db.Post.findAll({})
-      .then(function(dbPost) {
-        res.json(dbPost);
-      });
+  app.get("/api/workouts", (req, res) => {
+    Workout.find({})
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    }).catch((err) => {
+      res.json(err);
+    });
   });
 
-  // Get route for returning posts of a specific category
-  app.get("/api/posts/category/:category", function(req, res) {
-    db.Post.findAll({
-      where: {
-        category: req.params.category
-      }
-    })
-      .then(function(dbPost) {
-        res.json(dbPost);
-      });
+  app.post("/api/workouts", function (req, res) {
+    Workout.create({})
+        .then(data => res.json(data))
+        .catch(err => {
+            console.log("err", err)
+            res.json(err)
+        })
+});
+
+  app.put("/api/workouts/:id", (req, res) => {
+    Workout.findByIdAndUpdate(req.params.id, { $push: { exercises: req.body } }, { useFindAndModify: false })
+    .then((dbWorkout) => {
+      res.json(dbWorkout);
+    }).catch((err) => {
+      res.json(err);
+    });
   });
 
-  // Get route for retrieving a single post
-  app.get("/api/posts/:id", function(req, res) {
-    db.Post.findOne({
-      where: {
-        id: req.params.id
-      }
-    })
-      .then(function(dbPost) {
-        res.json(dbPost);
-      });
+  app.get("/api/workouts/range", (req, res) => {
+    Workout.find({}).sort({ day: -1 }).limit(7).then(dbWorkout => {
+      res.json(dbWorkout)
+    }).catch((err) => {
+      res.json(err);
+    });
   });
 
-  // POST route for saving a new post
-  app.post("/api/posts", function(req, res) {
-    console.log(req.body);
-    db.Post.create({
-      title: req.body.title,
-      body: req.body.body,
-      category: req.body.category
-    })
-      .then(function(dbPost) {
-        res.json(dbPost);
-      });
-  });
-
-  // DELETE route for deleting posts
-  app.delete("/api/posts/:id", function(req, res) {
-    db.Post.destroy({
-      where: {
-        id: req.params.id
-      }
-    })
-      .then(function(dbPost) {
-        res.json(dbPost);
-      });
-  });
-
-  // PUT route for updating posts
-  app.put("/api/posts", function(req, res) {
-    db.Post.update(req.body,
-      {
-        where: {
-          id: req.body.id
-        }
-      })
-      .then(function(dbPost) {
-        res.json(dbPost);
-      });
-  });
 };
