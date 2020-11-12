@@ -12,11 +12,15 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Mongoose boilerplate
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/workout";
-mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useFindAndModify: false
-})
+mongoose.connect(
+    process.env.MONGODB_URI || 'mongodb://localhost/workout',
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false
+    }
+  );
 
 // Required routing
 require("./routes/api-routes")(app);
